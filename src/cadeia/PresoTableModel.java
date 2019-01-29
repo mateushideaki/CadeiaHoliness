@@ -5,8 +5,11 @@
  */
 package cadeia;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -25,6 +28,19 @@ public class PresoTableModel extends AbstractTableModel {
     //Esse é um construtor, que recebe a nossa lista de Clientes
     public PresoTableModel(List<Preso> lista) {
         this.lista = new ArrayList<Preso>(lista);
+    }
+    
+    public List<Integer> getLibertos() {
+    	
+    	List<Integer> libertos = new ArrayList<Integer>();
+    	int row = 0;
+    	for (Preso preso : this.lista) {
+    		if (preso.getSaida().before(new Date()))
+    			libertos.add(row);
+    		row++;
+    	}
+    	
+    	return libertos;
     }
 
     public void setLista(List<Preso> l) {
@@ -66,33 +82,13 @@ public class PresoTableModel extends AbstractTableModel {
         } else*/ if (column == Nome) {
             return cli.getNome();
         } else if (column == Entrada) {
-            if(cli.getEntrada().getHours() < 10){
-                if(cli.getEntrada().getMinutes() < 10){
-                    return "0"+cli.getEntrada().getHours() + ":" + "0"+ cli.getEntrada().getMinutes();
-                } else {
-                    return "0"+cli.getEntrada().getHours() + ":" + cli.getEntrada().getMinutes();
-                }
-            } else {
-                if(cli.getEntrada().getMinutes() < 10){
-                    return cli.getEntrada().getHours() + ":" + "0"+ cli.getEntrada().getMinutes();
-                } else {
-                    return cli.getEntrada().getHours() + ":" + cli.getEntrada().getMinutes();
-                }
-            }
+        	SimpleDateFormat dateformat = new SimpleDateFormat("HH:mm");
+        	String data = dateformat.format(cli.getEntrada());
+        	return data;
         } else if (column == Saida) {
-            if(cli.getSaida().getHours() < 10){
-                if(cli.getSaida().getMinutes() < 10){
-                    return "0"+cli.getSaida().getHours() + ":" + "0"+ cli.getSaida().getMinutes();
-                } else {
-                    return "0"+cli.getSaida().getHours() + ":" + cli.getSaida().getMinutes();
-                }
-            } else {
-                if(cli.getSaida().getMinutes() < 10){
-                    return cli.getSaida().getHours() + ":" + "0"+ cli.getSaida().getMinutes();
-                } else {
-                    return cli.getSaida().getHours() + ":" + cli.getSaida().getMinutes();
-                }
-            }
+        	SimpleDateFormat dateformat = new SimpleDateFormat("HH:mm");
+        	String data = dateformat.format(cli.getSaida());
+        	return data;
         }
 
         return ""; //Nunca deve ocorrer  
